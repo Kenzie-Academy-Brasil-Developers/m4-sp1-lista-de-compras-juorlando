@@ -1,6 +1,6 @@
-import { Client } from "./interface";
+import { ClientWorkOrder } from "./interface";
 
-let lista: Array<Client> = [];
+let lista: Array<ClientWorkOrder> = [];
 
 let ids: number[] = []
 

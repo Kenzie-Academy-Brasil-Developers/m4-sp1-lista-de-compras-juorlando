@@ -1,9 +1,12 @@
 type ClienteRequiredKeys = "id" | "listName" | "data";
 
 interface Client {
-  id: number;
-  listName: string;
-  data: Data;
+  listName?: string;
+  data?: Data[];
+}
+
+interface ClientWorkOrder extends Client {
+  id: number,
 }
 
 interface Data {
@@ -11,4 +14,4 @@ interface Data {
     quantity: string,
 }
 
-export { ClienteRequiredKeys, Client, Data };
+export { ClienteRequiredKeys, Client, Data, ClientWorkOrder };
