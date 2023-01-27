@@ -1,25 +1,9 @@
-import { request, Request, Response } from "express";
-import { lista, ids } from "./database";
-import { Client, ClienteRequiredKeys, ClientWorkOrder } from "./interface";
+import { Request, Response } from "express";
+import { list, ids } from "./database";
+import {ClientWorkOrder} from "./interface";
 
-const validateData = (payload: any): Client => {
-  const payLoadKeys: Array<string> = Object.keys(payload);
-  const requiredKeys: Array<ClienteRequiredKeys> = ["listName", "data"];
-
-  const hasRequiredKeys: boolean = requiredKeys.every((key: string) =>
-    payLoadKeys.includes(key)
-  );
-
-  if (!hasRequiredKeys) {
-    const joinedKeys: string = requiredKeys.join(", ");
-    throw new Error(`Required key are: ${joinedKeys}.`);
-  }
-  return payload;
-};
-
-const createClientList = (request: Request, response: Response): Response => {
+const createClientList = ({validatedBody}: Request, response: Response): Response => {
   try {
-    const orderData: Client | {} = validateData(request.body);
 
     let id: number = 0;
 
@@ -33,12 +17,13 @@ const createClientList = (request: Request, response: Response): Response => {
       });
     }
 
+    
     const newClientList: ClientWorkOrder = {
       id: generateID(),
-      ...orderData,
+      ...validatedBody,
     };
-
-    lista.push(newClientList);
+    
+    list.push(newClientList);
 
     return response.status(201).json(newClientList);
   } catch (error: unknown) {
@@ -51,21 +36,36 @@ const createClientList = (request: Request, response: Response): Response => {
 };
 
 const receiveList = (request: Request, response: Response): Response => {
-  return response.json(lista);
+  return response.status(200).json(list);
 };
 
 const receiveOneList = (request: Request, response: Response): Response => {
-  const indexList: number = request.workOrder.indexList;
+  const indexList: number = request.indexList;
 
-  return response.json(lista[indexList]);
+  return response.json(list[indexList]);
 };
 
 const deleteOneList = (request: Request, response: Response): Response => {
-  const indexList: number = request.workOrder.indexList;
+  const indexList: number = request.indexList;
 
-  lista.splice(indexList, 1);
+  list.splice(indexList, 1);
 
   return response.status(204).send();
 };
 
-export { createClientList, receiveList, receiveOneList, deleteOneList };
+const deleteListIten = (request: Request, response: Response): Response => {
+  const indexList: number = request.indexList;
+
+  list.splice(indexList, 1);
+
+  return response.status(204).send();
+};
+
+const updateListInformation = ({validatedBody, indexList}: Request, response: Response): Response => {
+
+  list[indexList] = {...list[indexList], ...validatedBody.data}
+
+  return response.json(list[indexList])
+}
+
+export { createClientList, receiveList, receiveOneList, deleteOneList, updateListInformation };

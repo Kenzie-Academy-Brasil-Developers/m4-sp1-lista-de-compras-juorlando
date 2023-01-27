@@ -1,7 +1,9 @@
-import { ClientWorkOrder } from "./interface";
+import { ClientWorkOrder, Data} from "./interface";
 
-let lista: Array<ClientWorkOrder> = [];
+let list: Array<ClientWorkOrder> = [];
 
 let ids: number[] = []
 
-export { lista, ids };
+let database: Array<Data> = []
+
+export { list, ids, database };
