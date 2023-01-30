@@ -4,12 +4,7 @@ type DataRequiredKeys = "name" | "quantity";
 
 interface Client {
   listName?: string;
-  data: [
-    {
-      name: string;
-      quantity: string;
-    }
-  ];
+  data: Data[],
 }
 
 interface ClientWorkOrder extends Client {

@@ -6,13 +6,14 @@ declare global {
     interface Request {
       validatedBody: {
         listName: string,
-        data: 
-        [{
-          name: string,
-          quantity: string,
-        }];
+        data: validatedData[],
       };
+      validatedData: {
+        name: string,
+        quantity: string,
+      }
       indexList: number;
+      indexIten: number;
     }
   }
 }
