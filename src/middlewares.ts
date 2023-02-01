@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { database, list } from "./database";
-import { ClienteRequiredKeys, DataRequiredKeys } from "./interface";
 
 const validateDataMiddleware = (
   request: Request,
@@ -8,15 +7,23 @@ const validateDataMiddleware = (
   next: NextFunction
 ): Response | void => {
   const payLoadKeys: Array<string> = Object.keys(request.body);
-  const requiredKeys: Array<ClienteRequiredKeys> = ["listName", "data"];
+  const keyValue: Array<any> = Object.values(request.body);
+  const requiredKeys: Array<string> = ["listName", "data"];
+  
+  const hasRequiredKeys: boolean = payLoadKeys.every((key: string) => {
+    return requiredKeys.includes(key);
+  });
 
-  let hasRequiredKeys: boolean = requiredKeys.every((key) =>
-    payLoadKeys.includes(key)
-  );
+  const typeKey: boolean = keyValue.every((key: any) => {
+    if (typeof key !== "string") {
+      return response
+        .status(400)
+        .json({ message: "Valores somente em string" });
+    }
+  });
 
   if (!hasRequiredKeys) {
-    const joinedKeys: string = requiredKeys.join(", ");
-    throw new Error(`Required key are: ${joinedKeys}.`);
+    return response.status(400).json({ message: "Algo deu errado" });
   }
 
   const { listName, data } = request.body;
@@ -35,22 +42,23 @@ const validateUpdateListMiddleware = (
   next: NextFunction
 ): Response | void => {
   const payLoadKeys: Array<string> = Object.keys(request.body);
-  const requiredKeyProduct: Array<DataRequiredKeys> = ["name", "quantity"];
+  const keyValue: Array<any> = Object.values(request.body);
+  const requiredKeyProduct: Array<string> = ["name", "quantity"];
 
-  let hasRequiredKeysProducts: boolean = requiredKeyProduct.every((key) =>
-    payLoadKeys.includes(key)
+  let hasRequiredKeysProducts: boolean = payLoadKeys.every((key) =>
+    requiredKeyProduct.includes(key)
   );
 
-  if (request.method === "PATCH") {
-    hasRequiredKeysProducts = requiredKeyProduct.some((key: string) =>
-      payLoadKeys.includes(key)
-    );
-    request.body = { ...list[request.indexIten], ...request.body };
-  }
+  const typeKey: boolean = keyValue.every((key: any) => {
+    if (typeof key !== "string") {
+      return response
+        .status(400)
+        .json({ message: "Valores somente em string" });
+    }
+  });
 
   if (!hasRequiredKeysProducts) {
-    const joinedKeys: string = requiredKeyProduct.join(", ");
-    throw new Error(`Required key are: ${joinedKeys}.`);
+    return response.status(400).json({ message: "Algo deu errado" });
   }
 
   const { name, quantity } = request.body;

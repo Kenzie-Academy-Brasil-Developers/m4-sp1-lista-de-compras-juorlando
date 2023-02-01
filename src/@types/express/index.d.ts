@@ -5,13 +5,13 @@ declare global {
   namespace Express {
     interface Request {
       validatedBody: {
-        listName: string,
-        data: validatedData[],
+        listName: string;
+        data: validatedData[];
       };
       validatedData: {
-        name: string,
-        quantity: string,
-      }
+        name: string;
+        quantity: string;
+      };
       indexList: number;
       indexIten: number;
     }

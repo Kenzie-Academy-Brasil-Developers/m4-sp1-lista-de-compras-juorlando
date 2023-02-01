@@ -3,7 +3,7 @@ type ClienteRequiredKeys = "listName" | "data";
 type DataRequiredKeys = "name" | "quantity";
 
 interface Client {
-  listName?: string;
+  listName: string;
   data: Data[],
 }
 
