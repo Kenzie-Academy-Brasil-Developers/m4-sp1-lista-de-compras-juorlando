@@ -9,7 +9,7 @@ const validateDataMiddleware = (
   const payLoadKeys: Array<string> = Object.keys(request.body);
   const keyValue: Array<any> = Object.values(request.body);
   const requiredKeys: Array<string> = ["listName", "data"];
-  
+
   const hasRequiredKeys: boolean = payLoadKeys.every((key: string) => {
     return requiredKeys.includes(key);
   });
@@ -18,12 +18,12 @@ const validateDataMiddleware = (
     if (typeof key !== "string") {
       return response
         .status(400)
-        .json({ message: "Valores somente em string" });
+        .json({ message: "tipo do valor de entrada inválido" });
     }
   });
 
   if (!hasRequiredKeys) {
-    return response.status(400).json({ message: "Algo deu errado" });
+    return response.status(400).json({ message: "entrada inválida" });
   }
 
   const { listName, data } = request.body;
@@ -53,12 +53,12 @@ const validateUpdateListMiddleware = (
     if (typeof key !== "string") {
       return response
         .status(400)
-        .json({ message: "Valores somente em string" });
+        .json({ message: "tipo do valor de entrada inválido" });
     }
   });
 
-  if (!hasRequiredKeysProducts) {
-    return response.status(400).json({ message: "Algo deu errado" });
+  if (!hasRequiredKeysProducts || typeKey === true) {
+    return response.status(400).json({ message: "entrada inválida" });
   }
 
   const { name, quantity } = request.body;
@@ -104,7 +104,7 @@ const ensureItenExist = (
 
   if (findIndexName === -1) {
     return response.status(404).json({
-      message: "Iten não encontrada",
+      message: "item não encontrado na lista",
     });
   }
 
